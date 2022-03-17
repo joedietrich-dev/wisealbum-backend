@@ -12,8 +12,8 @@ gem "pg"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 
-# Build JSON APIs with ease [https://github.com/rails/jbuilder]
-# gem "jbuilder"
+# Build JSON APIs with jsonapi-serializer [https://github.com/jsonapi-serializer/jsonapi-serializer]
+gem "jsonapi-serializer"
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
@@ -34,7 +34,7 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem "rack-cors"
+gem "rack-cors"
 
 # Use Figaro for environment variable mangement
 gem "figaro"
