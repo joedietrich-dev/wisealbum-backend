@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
-  resources :roles
+  resources :roles, only: [:list]
   resources :organizations
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
