@@ -11,4 +11,20 @@ class User < ApplicationRecord
   
   belongs_to :organization, optional: true
   belongs_to :role
+
+  def super_admin?
+    self.role_id == 1
+  end
+
+  def org_owner?
+    self.role_id == 2
+  end
+
+  def contributor?
+    self.role_id == 3
+  end
+
+  def viewer?
+    self.role_id == 4
+  end
 end
