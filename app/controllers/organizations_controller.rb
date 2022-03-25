@@ -1,5 +1,6 @@
 class OrganizationsController < ApplicationController
   before_action :set_organization, only: %i[ show update destroy ]
+  before_action :authenticate_user!, only: %i[ create update destroy]
 
   # GET /organizations
   def index
@@ -15,8 +16,16 @@ class OrganizationsController < ApplicationController
 
   # POST /organizations
   def create
-    @organization = Organization.new(organization_params)
+    # Superadmin -> create organization, not added to it
+    # Not Superadmin, no org_id -> create org, added to it
+    # Not Superadmin, org_id -> fail
+    if (!current_user.super_admin? and current_user.organization_id) or !(current_user.super_admin? or current_user.org_owner?)
+      render json: {errors: "You cannot create an organization"}, status: :forbidden
+      return
+    end 
 
+    @organization = Organization.new(organization_params)
+    @organization.users << current_user unless current_user.super_admin?
     if @organization.save
       render json: @organization, status: :created, location: @organization
     else
