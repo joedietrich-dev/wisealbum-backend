@@ -11,7 +11,7 @@ class OrganizationsController < ApplicationController
 
   # GET /organizations/1
   def show
-    render json: @organization
+    render json: OrganizationSerializer.new(@organization).serializable_hash[:data][:attributes]
   end
 
   # POST /organizations
@@ -35,8 +35,15 @@ class OrganizationsController < ApplicationController
 
   # PATCH/PUT /organizations/1
   def update
+    # if the current user is not (an admin or (an owner of the specific org)
+    puts "HELLO"
+    if !(current_user.super_admin? || (current_user.org_owner? && current_user.organization_id == @organization.id))
+      render json: {errors: "You cannot edit this organization"}, status: :forbidden
+      return
+    end
+
     if @organization.update(organization_params)
-      render json: @organization
+      render json: OrganizationSerializer.new(@organization).serializable_hash[:data][:attributes]
     else
       render json: @organization.errors, status: :unprocessable_entity
     end
@@ -55,6 +62,6 @@ class OrganizationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def organization_params
-      params.require(:organization).permit(:name, :url_path, :logo_url, :is_blocked)
+      params.require(:organization).permit(:id, :name, :url_path, :logo_url, :is_blocked)
     end
 end
