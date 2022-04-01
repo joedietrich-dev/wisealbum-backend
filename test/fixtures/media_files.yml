@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  url: MyString
+  description: MyString
+  order: 1
+  is_blocked: false
+  is_hidden: false
+
+two:
+  type: 
+  url: MyString
+  description: MyString
+  order: 1
+  is_blocked: false
+  is_hidden: false

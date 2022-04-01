@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :tags
+  resources :media_files
+  resources :albums
   get 'current_user', to: 'current_user#index'
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
