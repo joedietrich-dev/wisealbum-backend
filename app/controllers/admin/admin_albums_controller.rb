@@ -1,21 +1,21 @@
-class AlbumsController < ApplicationController
+class Admin::AdminAlbumsController < ApplicationController
   before_action :set_album, only: %i[ show update destroy ]
-  before_action :authenticate_user!, only: %i[ create update destroy]
-  before_action :set_organization
+  before_action :authenticate_user!
+  before_action :authorize_user
 
-  # GET /organizations/:org_id/albums
+  # GET /admin/albums
   def index
-    @albums = Album.where(organization: @organization)
+    @albums = Album.all
 
     render json: @albums
   end
 
-  # GET /organizations/:org_id/albums/1
+  # GET /admin/albums/1
   def show
     render json: @album
   end
 
-  # POST /organizations/:org_id/albums
+  # POST /albums
   def create
     if current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization == @organization)
       @album = Album.new(album_params)
@@ -32,7 +32,7 @@ class AlbumsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /organizations/:org_id/albums/1
+  # PATCH/PUT /albums/1
   def update
     if @album.update(album_params)
       render json: @album
@@ -41,7 +41,7 @@ class AlbumsController < ApplicationController
     end
   end
 
-  # DELETE /organizations/:org_id/albums/1
+  # DELETE /albums/1
   def destroy
     @album.destroy
   end
@@ -54,6 +54,13 @@ class AlbumsController < ApplicationController
 
     def set_organization
       @organization = Organization.find(params[:organization_id])
+    end
+
+    def authorize_user
+      unless current_user.super_admin?
+        render json: {errors: "Forbidden"}, status: :forbidden 
+        return
+      end
     end
 
     # Only allow a list of trusted parameters through.

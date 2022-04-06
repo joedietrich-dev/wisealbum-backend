@@ -65,3 +65,5 @@ class OrganizationsController < ApplicationController
       params.require(:organization).permit(:id, :name, :url_path, :logo_url, :is_blocked)
     end
 end
+
+# FIGURE OUT WHERE TO PUT THE METHODS TO FILTER ALBUMS BY ORGANIZATION AND ROLE

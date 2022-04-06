@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   resources :tags
   resources :media_files
-  resources :albums
   get 'current_user', to: 'current_user#index'
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
@@ -13,7 +12,12 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
   resources :roles, only: [:list]
-  resources :organizations
+  resources :organizations do
+    resources :albums
+  end
+  namespace :admin do
+    resources :albums, controller: 'admin_albums', only: [:index, :show]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
