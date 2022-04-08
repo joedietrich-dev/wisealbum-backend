@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_01_004256) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_08_023005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,7 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_01_004256) do
   end
 
   create_table "media_files", force: :cascade do |t|
-    t.string "type"
+    t.string "file_type"
     t.string "url"
     t.string "description"
     t.integer "order"
