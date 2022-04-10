@@ -1,18 +1,11 @@
 class MediaFilesController < ApplicationController
-  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
-  before_action :authenticate_user!, only: %i[]
+  before_action :authenticate_user!
   before_action :set_media_file, only: %i[ show update destroy ]
-  before_action :set_album, only: %i[ index create ]
 
-  # GET /media_files?album_id=<album_id>
+  # GET /media_files
   def index
-    if user_can_contribute?
-      @media_files = MediaFile.where(album_id: @album.id).order(:order)
-    elsif @album.is_published and !@album.is_blocked
-      @media_files = MediaFile.where(album_id: @album.id).where(is_blocked: false).where(is_hidden: false).order(:order)
-    else
-      @media_files = []
-    end
+    @media_files = MediaFile.all
+
     render json: @media_files
   end
 
@@ -23,7 +16,7 @@ class MediaFilesController < ApplicationController
 
   # POST /media_files
   def create    
-    if user_can_contribute?
+    if current_user.super_admin? or current_user.org_owner? or current_user.contributor?
       @media_file = MediaFile.new(media_file_params)
       if @media_file.save
         render json: @media_file, status: :created, location: @media_file
@@ -55,24 +48,8 @@ class MediaFilesController < ApplicationController
       @media_file = MediaFile.find(params[:id])
     end
 
-    def set_album 
-      @album = Album.find(params[:album_id])
-    end
-
     # Only allow a list of trusted parameters through.
     def media_file_params
       params.require(:media_file).permit(:file_type, :url, :description, :order, :is_blocked, :is_hidden, :album_id)
-    end
-
-    def user_can_contribute?
-      return false unless current_user
-      if current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization_id == @album.organization_id)
-        return true
-      end
-      false
-    end
-
-    def render_not_found_response
-      render json: { error: "Could not find record" }, status: :not_found
     end
 end
