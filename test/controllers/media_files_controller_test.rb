@@ -12,7 +12,7 @@ class MediaFilesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create media_file" do
     assert_difference("MediaFile.count") do
-      post media_files_url, params: { media_file: { description: @media_file.description, is_blocked: @media_file.is_blocked, is_hidden: @media_file.is_hidden, order: @media_file.order, type: @media_file.type, url: @media_file.url } }, as: :json
+      post media_files_url, params: { media_file: { description: @media_file.description, is_blocked: @media_file.is_blocked, is_published: @media_file.is_published, order: @media_file.order, type: @media_file.type, url: @media_file.url } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class MediaFilesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update media_file" do
-    patch media_file_url(@media_file), params: { media_file: { description: @media_file.description, is_blocked: @media_file.is_blocked, is_hidden: @media_file.is_hidden, order: @media_file.order, type: @media_file.type, url: @media_file.url } }, as: :json
+    patch media_file_url(@media_file), params: { media_file: { description: @media_file.description, is_blocked: @media_file.is_blocked, is_published: @media_file.is_published, order: @media_file.order, type: @media_file.type, url: @media_file.url } }, as: :json
     assert_response :success
   end
 

@@ -19,7 +19,6 @@ class UploadController < ApplicationController
       object_key = upload_params[:filename]
       bucket = Aws::S3::Bucket.new ENV['S3_BUCKET']
       url = bucket.object(object_key).presigned_url(:put)
-      # presigned_post = bucket.object(object_key)
       puts "Created presigned URL: #{url}."
       URI(url)
     rescue Aws::Errors::ServiceError => e

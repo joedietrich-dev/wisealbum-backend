@@ -9,7 +9,7 @@ class MediaFilesController < ApplicationController
     if user_can_contribute?
       @media_files = MediaFile.where(album_id: @album.id).order(:order)
     elsif @album.is_published and !@album.is_blocked
-      @media_files = MediaFile.where(album_id: @album.id).where(is_blocked: false).where(is_hidden: false).order(:order)
+      @media_files = MediaFile.where(album_id: @album.id).where(is_blocked: false).where(is_published: true).order(:order)
     else
       @media_files = []
     end
@@ -37,16 +37,25 @@ class MediaFilesController < ApplicationController
 
   # PATCH/PUT /media_files/1
   def update
-    if @media_file.update(media_file_params)
-      render json: @media_file
+    if user_can_contribute?
+      if @media_file.update(media_file_params)
+        render json: @media_file
+      else
+        render json: @media_file.errors, status: :unprocessable_entity
+      end
     else
-      render json: @media_file.errors, status: :unprocessable_entity
+      render json: {errors: "You cannot edit"}, status: :forbidden
     end
   end
 
   # DELETE /media_files/1
   def destroy
-    @media_file.destroy
+    if user_can_contribute?
+      @media_file.destroy
+      # TODO Delete media file using s3
+    else
+      render json: {errors: "You cannot edit"}, status: :forbidden
+    end
   end
 
   private
@@ -61,10 +70,11 @@ class MediaFilesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def media_file_params
-      params.require(:media_file).permit(:file_type, :url, :description, :order, :is_blocked, :is_hidden, :album_id)
+      params.require(:media_file).permit(:file_type, :url, :description, :order, :is_blocked, :is_published, :album_id)
     end
 
     def user_can_contribute?
+      @album = @album || Album.find(@media_file.album_id)
       return false unless current_user
       if current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization_id == @album.organization_id)
         return true

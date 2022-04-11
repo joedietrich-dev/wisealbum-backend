@@ -1,4 +1,4 @@
-class MediaFilesController < ApplicationController
+class Admin::AdminMediaFilesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_media_file, only: %i[ show update destroy ]
 
