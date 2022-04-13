@@ -59,5 +59,8 @@ group :development do
 
   # Allow integration with VSCode plugins for language features
   gem "solargraph"
+
+  # Intercept emails sent on development
+  gem "letter_opener"
 end
 
