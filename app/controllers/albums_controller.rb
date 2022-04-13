@@ -17,7 +17,7 @@ class AlbumsController < ApplicationController
 
   # POST /organizations/:org_id/albums
   def create
-    if current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization == @organization)
+    if user_can_contribute?
       @album = Album.new(album_params)
       @album.organization = @organization
 
@@ -28,22 +28,29 @@ class AlbumsController < ApplicationController
       end
     else
       render json: {errors: "You cannot create an album"}, status: :forbidden
-      return
     end
   end
 
   # PATCH/PUT /organizations/:org_id/albums/1
   def update
-    if @album.update(album_params)
-      render json: @album
+    if user_can_contribute?
+      if @album.update(album_params)
+        render json: @album
+      else
+        render json: @album.errors, status: :unprocessable_entity
+      end
     else
-      render json: @album.errors, status: :unprocessable_entity
+      render json: {errors: "You cannot update an album"}, status: :forbidden
     end
   end
 
   # DELETE /organizations/:org_id/albums/1
   def destroy
-    @album.destroy
+    if user_can_contribute?
+      @album.destroy
+    else
+      render json: {errors: "You cannot update an album"}, status: :forbidden
+    end
   end
 
   private
@@ -54,6 +61,12 @@ class AlbumsController < ApplicationController
 
     def set_organization
       @organization = Organization.find(params[:organization_id])
+    end
+
+    def user_can_contribute?
+      @album = @album || Album.find(@media_file.album_id)
+      return false unless current_user
+      current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization_id == @album.organization_id)
     end
 
     # Only allow a list of trusted parameters through.

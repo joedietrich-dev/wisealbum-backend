@@ -1,5 +1,5 @@
 class OrganizationsController < ApplicationController
-  before_action :authenticate_user!, only: %i[ create update destroy]
+  before_action :authenticate_user!, only: %i[ index create update destroy]
   before_action :set_organization, only: %i[ show update destroy ]
 
   # GET /organizations
@@ -36,7 +36,6 @@ class OrganizationsController < ApplicationController
   # PATCH/PUT /organizations/1
   def update
     # if the current user is not (an admin or (an owner of the specific org)
-    puts "HELLO"
     if !(current_user.super_admin? || (current_user.org_owner? && current_user.organization_id == @organization.id))
       render json: {errors: "You cannot edit this organization"}, status: :forbidden
       return
@@ -51,7 +50,11 @@ class OrganizationsController < ApplicationController
 
   # DELETE /organizations/1
   def destroy
-    @organization.destroy
+    if !(current_user.super_admin? || (current_user.org_owner? && current_user.organization_id == @organization.id))
+      @organization.destroy 
+    else
+      render json: {errors: "You cannot edit this organization"}, status: :forbidden
+    end
   end
 
   private
@@ -65,5 +68,3 @@ class OrganizationsController < ApplicationController
       params.require(:organization).permit(:id, :name, :url_path, :logo_url, :is_blocked)
     end
 end
-
-# FIGURE OUT WHERE TO PUT THE METHODS TO FILTER ALBUMS BY ORGANIZATION AND ROLE

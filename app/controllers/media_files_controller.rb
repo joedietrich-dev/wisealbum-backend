@@ -76,10 +76,7 @@ class MediaFilesController < ApplicationController
     def user_can_contribute?
       @album = @album || Album.find(@media_file.album_id)
       return false unless current_user
-      if current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization_id == @album.organization_id)
-        return true
-      end
-      false
+      current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization_id == @album.organization_id)
     end
 
     def render_not_found_response
