@@ -50,6 +50,6 @@ class Admin::AdminMediaFilesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def media_file_params
-      params.require(:media_file).permit(:file_type, :url, :description, :order, :is_blocked, :is_hidden, :album_id)
+      params.require(:media_file).permit(:file_type, :url, :description, :order, :is_blocked, :is_published, :album_id)
     end
 end
