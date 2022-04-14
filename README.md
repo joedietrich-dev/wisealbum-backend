@@ -1,11 +1,8 @@
-# README
+# WiseAlbum API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This serves as the API layer for WiseAlbum, a multi-tenant media sharing application.
 
-Things you may want to cover:
-
-- Ruby version
+This application runs on Ruby 3.1.1, and as configured, a PostgreSQL database
 
 - System dependencies
 
