@@ -17,7 +17,7 @@ class AlbumsController < ApplicationController
 
   # POST /organizations/:org_id/albums
   def create
-    if user_can_contribute?
+    if user_can_create?
       @album = Album.new(album_params)
       @album.organization = @organization
 
@@ -64,9 +64,14 @@ class AlbumsController < ApplicationController
     end
 
     def user_can_contribute?
-      @album = @album || Album.find(@media_file.album_id)
+      @album = @album || Album.find(params[:id])
       return false unless current_user
       current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization_id == @album.organization_id)
+    end
+
+    def user_can_create?
+      return false unless current_user
+      current_user.super_admin? or ((current_user.org_owner? or current_user.contributor?) and current_user.organization_id == @organization.id)
     end
 
     # Only allow a list of trusted parameters through.
