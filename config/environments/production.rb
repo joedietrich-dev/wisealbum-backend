@@ -62,7 +62,8 @@ Rails.application.configure do
     address: ENV["SES_ENDPOINT"],
     user_name: ENV["SES_USER_NAME"],
     password: ENV["SES_SMTP_PASSWORD"],
-    port: ENV["SES_SMTP_PORT"]
+    port: ENV["SES_SMTP_PORT"],
+    enable_starttls: true
   }
   config.action_mailer.default_options = {
     from: ENV["MAILER_SENDER"]
