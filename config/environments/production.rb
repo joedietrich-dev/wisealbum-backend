@@ -60,6 +60,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: ENV['FRONTEND_HOST'] }
   config.action_mailer.smtp_settings = {
+    domain: ENV["SES_SENDFROM_HOST"],
     address: ENV["SES_ENDPOINT"],
     user_name: ENV["SES_USER_NAME"],
     password: ENV["SES_SMTP_PASSWORD"],
