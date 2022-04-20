@@ -55,12 +55,22 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "wisealbum_backend_production"
 
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: ENV['host'] }
+  config.action_mailer.default_url_options = { host: ENV['FRONTEND_HOST'] }
+  config.action_mailer.smtp_settings = {
+    address: ENV["SES_ENDPOINT"],
+    user_name: ENV["SES_USER_NAME"],
+    password: ENV["SES_SMTP_PASSWORD"],
+    port: ENV["SES_SMTP_PORT"]
+  }
+  config.action_mailer.default_options = {
+    from: ENV["MAILER_SENDER"]
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
