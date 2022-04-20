@@ -44,6 +44,21 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
 
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.perform_caching = false
+  # config.action_mailer.default_url_options = { host: ENV['FRONTEND_HOST'] }
+  # config.action_mailer.smtp_settings = {
+  #   domain: ENV["SES_SENDFROM_HOST"],
+  #   address: ENV["SES_ENDPOINT"],
+  #   user_name: ENV["SES_USER_NAME"],
+  #   password: ENV["SES_SMTP_PASSWORD"],
+  #   port: ENV["SES_SMTP_PORT"],
+  #   authentication: :plain
+  # }
+  # config.action_mailer.default_options = {
+  #   from: ENV["MAILER_SENDER"]
+  # }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
