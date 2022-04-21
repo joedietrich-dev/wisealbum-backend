@@ -11,7 +11,7 @@ class OrganizationsController < ApplicationController
 
   # GET /organizations/1
   def show
-    render json: OrganizationSerializer.new(@organization).serializable_hash[:data][:attributes]
+    render json: OrganizationSerializer.new(@organization, params: {admin: user_can_contribute? }).serializable_hash[:data][:attributes]
   end
 
   # POST /organizations
@@ -36,21 +36,20 @@ class OrganizationsController < ApplicationController
   # PATCH/PUT /organizations/1
   def update
     # if the current user is not (an admin or (an owner of the specific org)
-    if !(current_user.super_admin? || (current_user.org_owner? && current_user.organization_id == @organization.id))
-      render json: {errors: "You cannot edit this organization"}, status: :forbidden
-      return
-    end
-
-    if @organization.update(organization_params)
-      render json: OrganizationSerializer.new(@organization).serializable_hash[:data][:attributes]
+    if user_can_contribute?
+      if @organization.update(organization_params)
+        render json: OrganizationSerializer.new(@organization, params: {admin: user_can_contribute? }).serializable_hash[:data][:attributes]
+      else
+        render json: @organization.errors, status: :unprocessable_entity
+      end
     else
-      render json: @organization.errors, status: :unprocessable_entity
+      render json: {errors: "You cannot edit this organization"}, status: :forbidden
     end
   end
 
   # DELETE /organizations/1
   def destroy
-    if !(current_user.super_admin? || (current_user.org_owner? && current_user.organization_id == @organization.id))
+    if user_can_contribute?
       @organization.destroy 
     else
       render json: {errors: "You cannot edit this organization"}, status: :forbidden
@@ -66,5 +65,10 @@ class OrganizationsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def organization_params
       params.require(:organization).permit(:id, :name, :url_path, :logo_url, :is_blocked)
+    end
+
+    def user_can_contribute?
+      return false unless current_user
+      current_user.super_admin? || (current_user.org_owner? && current_user.organization_id == @organization.id)
     end
 end

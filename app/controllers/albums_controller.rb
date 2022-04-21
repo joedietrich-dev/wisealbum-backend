@@ -5,14 +5,22 @@ class AlbumsController < ApplicationController
 
   # GET /organizations/:org_id/albums
   def index
-    @albums = Album.where(organization: @organization)
-
+    if user_can_create? 
+      @albums = Album.where(organization: @organization)
+    else
+      @albums = Album.where(organization: @organization, is_published: true)
+    end
+    puts current_user
     render json: @albums
   end
 
   # GET /organizations/:org_id/albums/1
   def show
-    render json: @album
+    if user_can_create? || @album.is_published
+      render json: @album
+    else
+      render json: { error: "Could not find record" }, status: :not_found
+    end
   end
 
   # POST /organizations/:org_id/albums

@@ -18,7 +18,11 @@ class MediaFilesController < ApplicationController
 
   # GET /media_files/1
   def show
-    render json: @media_file
+    if user_can_contribute? || (@media_file.is_published && !@media_file.is_blocked)
+      render json: @media_file
+    else
+      render json: { error: "Could not find record" }, status: :not_found
+    end
   end
 
   # POST /media_files
