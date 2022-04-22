@@ -37,6 +37,7 @@ See https://davidmles.medium.com/setting-up-rails-to-send-emails-with-amazon-ses
 - `FRONTEND_HOST` - The host for the application's frontend
 - `FRONTEND_PORT` - (Optional in production) The port for the application's frontend
 - `PORT` - (Optional) The port for the backend to run on, will default to 3000
+- `ALLOWED_ORIGINS` - Sets the allowed origins for CORS, set to "\*" for development
 
 ## Setup Instructions
 
