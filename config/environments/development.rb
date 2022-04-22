@@ -39,7 +39,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Set default URL for action_mailer
-  config.action_mailer.default_url_options = { host: ENV["HOST"], port: ENV["PORT"] }
+  config.action_mailer.default_url_options = { host: ENV["FRONTEND_HOST"], port: ENV["FRONTEND_PORT"] }
 
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
