@@ -8,7 +8,8 @@ Rails.application.routes.draw do
   controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',
-    passwords: 'users/passwords'
+    passwords: 'users/passwords',
+    invitations: 'users/invitations'
   }
 
   resources :roles, only: [:list]

@@ -45,6 +45,9 @@ gem "devise"
 # Use devise::JWT for JWT integrations
 gem "devise-jwt"
 
+# Use DeviseInvitable for User Invitations
+gem "devise_invitable", '~> 2.0.0'
+
 # Use the AWS s3 SDK to presign media urls
 gem 'aws-sdk-s3', '~> 1.113'
 
