@@ -1,23 +1,25 @@
 class Users::InvitationsController < Devise::InvitationsController
+  include RackSessionFixController
   respond_to :json
   before_action :configure_permitted_parameters
 
-  def update
-    super do |resource|
-      if resource.errors.empty?
-        render json: { 
-          status: {message: "Invitation Accepted!", code: 200}, 
-          data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
-        }
-      else
-        render json: resource.errors, status: :unprocessable_entity
-      end
-    end
-  end
+  # def update
+  #   super do |resource|
+  #     if resource.errors.empty?
+  #       render json: { 
+  #         status: {message: "Invitation Accepted!", code: 200}, 
+  #         data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+  #       }
+  #     else
+  #       render json: resource.errors, status: :unprocessable_entity
+  #     end
+  #   end
+  # end
 
   protected
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:invite, keys: [:full_name, :organization_id, :role_id])
+
     end
 
   private
